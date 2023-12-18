@@ -23,8 +23,6 @@ CHANNEL_ID= os.getenv("CHANNEL_ID")
 BOT_ID = os.getenv("BOT_ID")
 
 client = WebClient(token= SLACK_TOKEN)
-file_path = os.environ.get("DATA_JSON_PATH", "data.json")   #retrieves the value associated with "DATA_JSON_PATH" in the .env file, Otherwise it returns "data.json"
-
 
 ############# LISTENING TO MESSAGES IN A CHANNEL ###########################
 def listen_to_channel(channel_id):
@@ -79,15 +77,23 @@ def send_message(channel_id, message, message_ts):
         
 
 ############# CREATING AN ANSWERING CHAIN - LANGCHAIN ###########################
+# with langchain==0.0.281
 import pickle
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 
-with open("faiss_store_openai.pkl", "rb") as f:
+# vectors_file_path = os.environ.get("VECTORS_PKL_PATH", "faiss_store_openai.pkl")
+
+script_directory = os.path.dirname(__file__) #path of executed file
+vectors_file_path = os.path.join(script_directory, "faiss_store_openai.pkl") #complete path of the .pkl file
+
+with open(vectors_file_path, "rb") as f:
     vectorStore = pickle.load(f)
+    
 llm = ChatOpenAI(model_name='gpt-4', temperature=0)
-chain = RetrievalQAWithSourcesChain.from_llm(llm=llm, retriever=vectorStore.as_retriever(), return_only_outputs=True)
+
+chain = RetrievalQAWithSourcesChain.from_llm(llm=llm, retriever=vectorStore.as_retriever())
 
 """ response = chain({"question": "What is a Planktoscope? "})
 print(response)
@@ -95,12 +101,18 @@ print(response['answer'])
 print(response['sources']) """
 
 
-
 ############# CREATING A THREAD & SEND MESSAGE ###########################
 
 # Open the JSON file and load the data
-with open(file_path, 'r') as file:
+#data_file_path = os.environ.get("DATA_JSON_PATH", "data.json")     #retrieves the value associated with "DATA_JSON_PATH" in the .env file, Otherwise it returns "data.json"
+
+script_directory = os.path.dirname(__file__) #path of executed file
+data_file_path = os.path.join(script_directory, "data.json") #complete path of the .pkl file
+
+with open(data_file_path, 'r') as file:
     data = json.load(file)
+    
+    
     
 if __name__ == "__main__":
     running = True

@@ -82,9 +82,16 @@ agent = initialize_agent(
 
 ######################### ALWAYS ANSWER INSIDE THREADS #########################################
 
+script_directory = os.path.dirname(__file__) #path of executed file
+data_file_path = os.path.join(script_directory, "data.json") #complete path of the .pkl file
+
+with open(data_file_path, 'r') as file:
+    data = json.load(file)
+    
+    
 def main():
     running = True
-    data = {}  # Initialize data before entering the loop
+    #data = {}  # Initialize data before entering the loop
     current_message, user, message_ts, thread_ts, result = listen_to_channel(CHANNEL_ID)
     
     while running:
@@ -99,13 +106,13 @@ def main():
                 with open(file_path, 'w') as file:
                     json.dump(data, file, indent=0)
                 post_message(CHANNEL_ID, f"Hi <@{user}>!", active_thread)
-                post_message(CHANNEL_ID, f"{agent(last_message)}", message_ts)
+                post_message(CHANNEL_ID, agent(last_message), message_ts)
 
             for active_thread in data.keys():
                 last_message, thread_user, last_message_ts, result = get_last_message_in_thread(CHANNEL_ID, active_thread)
                 if thread_user != BOT_ID and result['messages'][0]['blocks'][0]['elements'][0]['elements'][0]['user_id'] == BOT_ID:
                     post_message(CHANNEL_ID, f"Hi <@{user}>!", active_thread)
-                    post_message(CHANNEL_ID, f"{agent(last_message)}", active_thread)
+                    post_message(CHANNEL_ID, agent(last_message), active_thread)
             time.sleep(1)
 
         except Exception as e:

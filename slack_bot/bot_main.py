@@ -23,7 +23,6 @@ CHANNEL_ID= os.getenv("CHANNEL_ID")
 BOT_ID = os.getenv("BOT_ID")
 
 client = WebClient(token= SLACK_TOKEN)
-file_path = os.environ.get("DATA_JSON_PATH", "data.json")   #retrieves the value associated with "DATA_JSON_PATH" in the .env file, Otherwise it returns "data.json"
 
 ############# LISTEN TO MESSAGES IN A CHANNEL ###########################
 def listen_to_channel(channel_id):
@@ -79,8 +78,14 @@ def send_message(channel_id, message, message_ts):
 ############# CREATE A THREAD & SEND MESSAGE ###########################
 
 # Open the JSON file and load the data
-with open(file_path, 'r') as file:
+
+#file_path = os.environ.get("DATA_JSON_PATH", "data.json")   #retrieves the value associated with "DATA_JSON_PATH" in the .env file, Otherwise it returns "data.json"
+script_directory = os.path.dirname(__file__) #path of executed file
+data_file_path = os.path.join(script_directory, "data.json") #complete path of the .pkl file
+
+with open(data_file_path, 'r') as file:
     data = json.load(file)
+    
     
 if __name__ == "__main__":
     running = True
