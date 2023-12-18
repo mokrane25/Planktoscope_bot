@@ -21,6 +21,7 @@ A file to store all the environment variables. This is a way to centralize these
 ##### webAgent.py #####
 - A langchain agent is used to make internet search to answer questions 
 - Note : unlike `langchain.py` this code provides answer without the source
+- The file `lgc_web.py` is just a variant of the `webAgent.py` 
 
 
 ## slack_bot : ##

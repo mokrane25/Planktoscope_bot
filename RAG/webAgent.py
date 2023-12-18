@@ -28,12 +28,27 @@ tool = load_tools(["google-search"], llm=llm, google_api_key=GOOGLE_API_KEY , go
 #agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,Verbose=True, return_intermediate_steps=True)
 agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, return_intermediate_steps=False)
 
-#query = "who invented the Planktoscope?"
-query = "quelles sont les lois de maxwell?"
+
+
+
+#query = "Quelles sont les lois de maxwell?"
+#query = "What is a planktoscope?"
+#query = "Who invented the Planktoscope?" 
+#query = "what is the fraction size of the particles that can be imaged by the PlanktoScope?" 
+#query = "what are the components of a planktoscope?" 
+#query = "What is the difference in between PlanktoScope and Flowcam ?" 
+#query = "what is the url to reach the GUI of the Planktoscope?" 
+
+
+
+query = "what is the software that controls the Planktoscope?" 
+
+
 
 #agent.run(query)
 #agent.run(query)['output']
 print(agent(query)['output'])
+
 
 """ 
 # https://github.com/langchain-ai/langchain/issues/3091 
