@@ -18,7 +18,7 @@ A file to store all the environment variables. This is a way to centralize these
 - A langchain agent is used to make internet search to answer questions 
 - The Answer is provided without the source
 
-### slack_bot :###
+### slack_bot : ###
 ##### bot_main.py #####
 - Listening to event in a specific channel in a slack workspace (PlanktoScope)
 - Answering the user in a thread under his message 
