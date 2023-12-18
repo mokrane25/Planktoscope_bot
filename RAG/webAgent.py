@@ -9,10 +9,11 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentType, Tool, initialize_agent
 from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain.document_loaders import DirectoryLoader
 
 from dotenv import load_dotenv
 import os
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env') 	# Relative path to .env file
+env_path = os.path.join(os.path.dirname(__file__),  '.env') 	# Relative path to .env file
 load_dotenv(env_path)
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -24,21 +25,25 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model_name='gpt-4', temperature=0.0)
 tool = load_tools(["google-search"], llm=llm, google_api_key=GOOGLE_API_KEY , google_cse_id=GOOGLE_CSE_ID)
 
-agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=False)
+#agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,Verbose=True, return_intermediate_steps=True)
+agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, return_intermediate_steps=False)
 
-query = "who invented the Planktoscope?"
+#query = "who invented the Planktoscope?"
+query = "quelles sont les lois de maxwell?"
 
-# agent.run(query)
-# agent(query)['output']
+#agent.run(query)
+#agent.run(query)['output']
+print(agent(query)['output'])
 
-
+""" 
 # https://github.com/langchain-ai/langchain/issues/3091 
 from langchain.callbacks import get_openai_callback
 
 with get_openai_callback() as cb:
     #cb.on_llm_new_token = OPENAI_API_KEY
     # out = agent(inputs=[query])
-    print(agent(inputs=[query]))
+    print(agent(inputs=[query])['output'])
+ """
 
 
 

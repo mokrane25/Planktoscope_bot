@@ -18,7 +18,6 @@ CHANNEL_ID = os.getenv("CHANNEL_ID")
 BOT_ID = os.getenv("BOT_ID")
 
 client = WebClient(token=SLACK_TOKEN)
-file_path = os.environ.get("DATA_JSON_PATH", "data.json")
 
 ################### LISTEN AND ANSWER TO SLACK MESSAGES ###########################
 def post_message(channel_id, text, thread_ts=None):
@@ -75,13 +74,12 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")      # in the Google Programmable Sea
 
 llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model_name='gpt-4', temperature=0.0)
 tool = load_tools(["google-search"], llm=llm, google_api_key=GOOGLE_API_KEY , google_cse_id=GOOGLE_CSE_ID)
-agent = initialize_agent(
-    tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=False
-)
+agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, return_intermediate_steps=False)
 
 
 ######################### ALWAYS ANSWER INSIDE THREADS #########################################
 
+#file_path = os.environ.get("DATA_JSON_PATH", "data.json")
 script_directory = os.path.dirname(__file__) #path of executed file
 data_file_path = os.path.join(script_directory, "data.json") #complete path of the .pkl file
 
@@ -100,19 +98,21 @@ def main():
             last_message, user, last_message_ts, result = get_last_message_in_thread(CHANNEL_ID, message_ts)
             
             if user != BOT_ID and result['messages'][0]['blocks'][0]['elements'][0]['elements'][0]['user_id'] == BOT_ID:
-                with open(file_path, 'r') as file:
+                with open(data_file_path, 'r') as file:
                     data = json.load(file)
                 data[message_ts] = ''
-                with open(file_path, 'w') as file:
+                with open(data_file_path, 'w') as file:
                     json.dump(data, file, indent=0)
                 post_message(CHANNEL_ID, f"Hi <@{user}>!", active_thread)
-                post_message(CHANNEL_ID, agent(last_message), message_ts)
+                response = agent(last_message)['output']
+                post_message(CHANNEL_ID, response, message_ts)
 
             for active_thread in data.keys():
                 last_message, thread_user, last_message_ts, result = get_last_message_in_thread(CHANNEL_ID, active_thread)
                 if thread_user != BOT_ID and result['messages'][0]['blocks'][0]['elements'][0]['elements'][0]['user_id'] == BOT_ID:
                     post_message(CHANNEL_ID, f"Hi <@{user}>!", active_thread)
-                    post_message(CHANNEL_ID, agent(last_message), active_thread)
+                    response = agent(last_message)['output']
+                    post_message(CHANNEL_ID, response, message_ts)
             time.sleep(1)
 
         except Exception as e:
