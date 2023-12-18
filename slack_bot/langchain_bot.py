@@ -14,7 +14,7 @@ import json
 ############# SETTINGS ###########################
 from dotenv import load_dotenv
 import os
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env') 	# Relative path to .env file
+env_path = os.path.join(os.path.dirname(__file__), '.env') 	# Relative path to .env file
 load_dotenv(env_path)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
