@@ -18,6 +18,7 @@ load_dotenv(env_path)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # in the Google Cloud Console > Library > enable Custom Search API 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+# in the Google Programmable Search Engine
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
 llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model_name='gpt-4', temperature=0.0)
@@ -27,8 +28,19 @@ agent = initialize_agent(tool, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
 
 query = "who invented the Planktoscope?"
 
-agent.run(query)
-agent(query)['output']
+# agent.run(query)
+# agent(query)['output']
+
+
+# https://github.com/langchain-ai/langchain/issues/3091 
+from langchain.callbacks import get_openai_callback
+
+with get_openai_callback() as cb:
+    #cb.on_llm_new_token = OPENAI_API_KEY
+    # out = agent(inputs=[query])
+    print(agent(inputs=[query]))
+
+
 
 
 #print(agent("quelles sont les lois de maxwell?")['output'])

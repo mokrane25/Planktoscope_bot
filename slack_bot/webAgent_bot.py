@@ -1,3 +1,5 @@
+# pip install google-api-python-client
+
 ################### IMPORTS ###########################
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -69,7 +71,7 @@ from langchain.agents import AgentType, initialize_agent, load_tools
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")    # in the Google Cloud Console > Library > enable Custom Search API 
-GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")      # in the Google Cloud Console > Library > enable Custom Search API 
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")      # in the Google Programmable Search Engine
 
 llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model_name='gpt-4', temperature=0.0)
 tool = load_tools(["google-search"], llm=llm, google_api_key=GOOGLE_API_KEY , google_cse_id=GOOGLE_CSE_ID)
@@ -80,7 +82,7 @@ agent = initialize_agent(
 
 ######################### ALWAYS ANSWER INSIDE THREADS #########################################
 
-if __name__ == "__main__":
+def main():
     running = True
     data = {}  # Initialize data before entering the loop
     current_message, user, message_ts, thread_ts, result = listen_to_channel(CHANNEL_ID)
@@ -109,3 +111,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"An error occurred: {e}")
             time.sleep(10)
+
+
+if __name__ == "__main__":
+    main()
