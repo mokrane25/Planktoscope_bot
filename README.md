@@ -9,13 +9,13 @@ A file to store all the environment variables. This is a way to centralize these
 
 
 ## RAG - Retrieval Augmented Generation : ##
-###### langchain.py ######
+##### langchain.py #####
 - Loading data from given websites 
 - Split this content into chunks
 - store them in Faiss vectores
 - Create vector embeddings using Faiss (langchain library) & OpenAi embedding model
 - Store evrything in a file named "faiss_store_openai.pkl"
-###### lgc_pinecone.py ######
+##### lgc_pinecone.py #####
 - Same as langchain.py except storage of data
 - Data stored in Pinecone database
 ##### webAgent.py #####
