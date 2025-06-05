@@ -76,7 +76,7 @@ import pickle
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 
-embeddings = OpenAIEmbeddings(model='text-embedding-ada-002', openai_api_key='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')
+embeddings = OpenAIEmbeddings(model='text-embedding-ada-002', openai_api_key=OPENAI_API_KEY)
 
 vectorStore_openAI = FAISS.from_documents(chunks, embeddings)
 
