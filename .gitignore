@@ -5,3 +5,4 @@ __pycache__/
 .lprof
 .env
 .DS_Store
+data.json
